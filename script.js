@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const notification = document.getElementById('notification');
 
     // Substitua esta URL pelo Webhook do seu N8N
-    const N8N_WEBHOOK_URL = 'https://n8n-webhook.confortareco.com/webhook/70b18ce7-e172-464f-a253-f918688aa6d8';
+    const N8N_WEBHOOK_URL = 'https://n8n.confortareco.com/webhook-test/70b18ce7-e172-464f-a253-f918688aa6d8';
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
