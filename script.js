@@ -18,7 +18,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Coleta os dados do formulário
         const formData = new FormData(form);
-        const data = Object.fromEntries(formData.entries());
+
+        // Formata a data para o padrão com fuso horário local (ex: -03:00)
+        const now = new Date();
+        const offset = -now.getTimezoneOffset();
+        const sign = offset >= 0 ? '+' : '-';
+        const pad = (num) => String(Math.floor(Math.abs(num))).padStart(2, '0');
+        const tzStr = `${sign}${pad(offset / 60)}:${pad(offset % 60)}`;
+        const localIso = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}.${String(now.getMilliseconds()).padStart(3, '0')}${tzStr}`;
+
+        // Cria o payload exatamente no formato esperado pelo N8N
+        const payload = [
+            {
+                "Nicho": formData.get('nicho'),
+                "submittedAt": localIso,
+                "formMode": "test"
+            }
+        ];
 
         try {
             // Opcional: Se quiser testar antes de ter a URL real do N8N configurada
@@ -32,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     'Content-Type': 'application/json',
                     // 'Authorization': 'Bearer SEU_TOKEN' // Descomente e adicione se usar Bearer Auth no N8N
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify(payload)
             });
 
             if (!response.ok) {
